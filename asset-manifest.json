@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/DigitalPivot-frontend/static/css/main.47d93d5c.css",
+    "main.js": "/DigitalPivot-frontend/static/js/main.3d5bc853.js",
+    "index.html": "/DigitalPivot-frontend/index.html",
+    "main.47d93d5c.css.map": "/DigitalPivot-frontend/static/css/main.47d93d5c.css.map",
+    "main.3d5bc853.js.map": "/DigitalPivot-frontend/static/js/main.3d5bc853.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.47d93d5c.css",
+    "static/js/main.3d5bc853.js"
+  ]
+}
