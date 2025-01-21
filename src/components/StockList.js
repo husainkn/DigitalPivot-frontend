@@ -6,11 +6,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { fetchStocks } from '../services/stockService';
+import { fetchStocks, fetchStockDetails } from '../services/stockService';
 
 const StockList = () => {
   const [stocks, setStocks] = useState([]);
   const [sorting, setSorting] = useState([]);
+  const [modalData, setModalData] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const loadStocks = async () => {
@@ -23,6 +25,26 @@ const StockList = () => {
     };
     loadStocks();
   }, []);
+
+  // const handleRowClick = async (ticker) => {
+  //   try {
+  //     const stockDetails = await fetchStockDetails(ticker);
+  //     setModalData(stockDetails);
+  //     setShowModal(true);
+  //   } catch (error) {
+  //     console.error('Failed to fetch stock details:', error);
+  //   }
+  // };
+
+  const handleRowClick = async (ticker) => {
+    try {
+      const stockDetails = await fetchStockDetails(ticker);
+      setModalData(stockDetails);
+      setShowModal(true);
+    } catch (error) {
+      console.error('Failed to fetch stock details:', error);
+    }
+  };
 
   const columnHelper = createColumnHelper();
 
@@ -101,7 +123,11 @@ const StockList = () => {
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
+            <tr
+              key={row.id}
+              onClick={() => handleRowClick(row.original.ticker)}
+              style={{ cursor: 'pointer' }}
+            >
               {row.getVisibleCells().map((cell) => (
                 <td key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -111,6 +137,50 @@ const StockList = () => {
           ))}
         </tbody>
       </table>
+
+      {showModal && modalData && (
+  <div className="modal">
+    <div className="modal-content">
+      <button onClick={() => setShowModal(false)}>Close</button>
+      <h2>Stock Details</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Currency</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+      {modalData.map((row, index) => (
+            <tr
+              key={index}
+              style={{
+                backgroundColor:
+                  row.Action && row.Action.toLowerCase().includes('sell')
+                    ? 'red'
+                    : 'transparent',
+                color:
+                  row.Action && row.Action.toLowerCase().includes('sell')
+                    ? 'white'
+                    : 'black',
+              }}
+            >
+              <td>{row.Action}</td>
+              <td>{row.NoOfShares}</td>
+              <td>{row.PricePerShare}</td>
+              <td>{row.Currency_PPS}</td>
+              <td>{row.TransactionDate}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <button onClick={() => setShowModal(false)}>Close</button>
+    </div>
+  </div>
+)}
     </div>
   );
 };
