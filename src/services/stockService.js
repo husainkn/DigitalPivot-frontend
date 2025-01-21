@@ -8,6 +8,6 @@ export const fetchStocks = async () => {
 };
 
 export const fetchStockDetails = async (stockId) => {
-  const response = await axios.get(`${API_BASE_URL}/stocks/${stockId}/history/m`);
+  const response = await axios.get(`${API_BASE_URL}/stocks/${stockId}/history/e`);
   return response.data;
 };
